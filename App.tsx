@@ -8,9 +8,11 @@
  * @format
  */
 
-import React, {Component} from 'react';
+import React, {Component, useReducer} from 'react';
 import {Platform, StyleSheet, Text, View, Image, Alert, AlertAndroid, ImageSourcePropType, TextBase, TextInput} from 'react-native';
 import images from './images'
+import Row from './components/layout/Row';
+import Col from './components/layout/Col';
 
 interface Props {}
 interface State { text: string}
@@ -29,20 +31,22 @@ export default class App extends Component<Props,State> {
   render() {
     return (
 
-      <View onTouchEnd={this.moow} style={styles.container}>
-        <Text style={styles.welcome}>Welcome to React Native!</Text>
-        <Text>{this.state.text}</Text>
-
-        <Image style={{height: 150, width: 150}} source={images.cat} />
-        <Image style={{height: 150, width: 150}} source={images.cats} />
-        <TextInput ref="input" onChangeText={this.updateText} /> 
+      <View  style={styles.container}>
+        <Row size={5} style={styles.white}>
+      
+        </Row>
+        <Row size={10} style={styles.dark}>
+          <Col size={9}></Col>
+          <Col size={3} style={styles.grey}></Col>
+          <Col style={styles.green}></Col>
+        </Row>
       </View>
 
     );
   }
 
   moow = () => {
-    // Alert.alert("Moow");
+    Alert.alert("Moow");
   }
   updateText = (text: string) => {
     this.text = text
@@ -55,18 +59,18 @@ export default class App extends Component<Props,State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
+  white:{
+    backgroundColor: "#FFFDFF"
   },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5
+  dark:{
+    backgroundColor: "#3E3C3E"
+  },
+  grey:{
+    backgroundColor: "#585958"
+  },
+  green:{
+    backgroundColor: "#61DDAF"
   },
 });
