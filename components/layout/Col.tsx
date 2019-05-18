@@ -20,18 +20,17 @@ export default class Col extends Component<Props, State>{
 
     render() {
         return (
-            <View {...this.props} style={this.style.row}>
+            <View style={[this.style.row, this.props.style]}>
                 {this.props.children}
             </View>
         );
     }
 
     private createStyle = (size: number) => {
-        let style = Object.assign({ flex: size}, this.props.style)
         this.style = StyleSheet.create({
-            row: style,
+            row: { flex: size },
         })
-        
+
     }
 
 }
