@@ -31,12 +31,12 @@ class CalcServiece {
         try {
             let value = this.operaion.getValue();
             value = value.replace("x", "*")
-            let result = eval(value);
+            let result = eval(value) || "";
             console.log(result)
             this.restul.next(result + "");
             this.operaion.next(result + "")
         } catch{
-            this.restul.next("invalid synax")
+            this.restul.next("invalid syntax")
         }
     }
 
@@ -48,6 +48,7 @@ class CalcServiece {
     public backSpace() {
         let value = this.operaion.getValue();
         this.operaion.next(value.substr(0, value.length - 1))
+        this.restul.next("");
     }
 
 
