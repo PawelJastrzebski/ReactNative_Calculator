@@ -1,26 +1,40 @@
-import React, { Component, useReducer, Dispatch } from 'react';
+import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, Image, Alert, AlertAndroid, ImageSourcePropType, TextBase, TextInput, NativeSyntheticEvent } from 'react-native';
 import Row from '../components/layout/Row';
 import Col from '../components/layout/Col';
-import { connect } from 'react-redux';
 import CalcButton from '../components/CalcButton';
+import CalcService from './Servies/CalcService';
 
-interface Props {
-    text: string,
-    counter: number
-    increase?: () => void,
-    decrease?: () => void
+interface Props { }
+interface State {
+    lastOperaion: string,
+    result: string
 }
-interface State { }
-export class App extends Component<Props, State> {
+export default class App extends Component<Props, State> {
+
+
+    public state = {
+        lastOperaion: "22+10",
+        result: "32"
+    }
 
     constructor(props: Props) {
         super(props)
+
+    }
+    componentDidMount() {
+
+        CalcService.getResult().subscribe((result) => {
+            this.setState({ result: result })
+        });
+
+        CalcService.getOperation().subscribe(operation => {
+            this.setState({ lastOperaion: operation })
+        })
     }
 
     onClick = (sign: string) => {
-        console.log(sign)
-        this.props.increase()
+        CalcService.passButton(sign);
     }
 
     render() {
@@ -28,47 +42,53 @@ export class App extends Component<Props, State> {
 
             <View style={styles.container}>
                 <Row size={5} style={styles.white}>
-                    <Text>{this.props.text}</Text>
-                    <Text style={{ fontSize: 20, padding: 20 }} >{this.props.counter}</Text>
+                    <Col>
+                        <Row>
+                            <Text style={styles.lastOperaion}>{this.state.lastOperaion}</Text>
+                        </Row>
+                        <Row>
+                            <Text style={styles.result}>{this.state.result}</Text>
+                        </Row>
+                    </Col>
                 </Row>
                 <Row size={10} style={[styles.grey]}>
                     <Col size={9} style={styles.buttons}>
                         <Row>
-                            <CalcButton onClick={this.onClick} color="#3E3C3E" sign="1"></CalcButton>
-                            <CalcButton color="#3E3C3E" sign="2"></CalcButton>
-                            <CalcButton color="#3E3C3E" sign="3"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="1"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="2"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="3"></CalcButton>
                         </Row>
                         <Row>
-                            <CalcButton color="#3E3C3E" sign="4"></CalcButton>
-                            <CalcButton color="#3E3C3E" sign="5"></CalcButton>
-                            <CalcButton color="#3E3C3E" sign="6"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="4"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="5"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="6"></CalcButton>
                         </Row>
                         <Row>
-                            <CalcButton color="#3E3C3E" sign="7"></CalcButton>
-                            <CalcButton color="#3E3C3E" sign="8"></CalcButton>
-                            <CalcButton color="#3E3C3E" sign="9"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="7"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="8"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="9"></CalcButton>
                         </Row>
                         <Row>
-                            <CalcButton color="#3E3C3E" sign="."></CalcButton>
-                            <CalcButton color="#3E3C3E" sign="0"></CalcButton>
-                            <CalcButton color="#3E3C3E" sign="="></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="."></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="0"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="="></CalcButton>
                         </Row>
                     </Col>
                     <Col size={3} style={[styles.dark, styles.buttons]}>
                         <Row>
-                            <CalcButton fontsize="19" color="#3E3C3E" sign="DEL"></CalcButton>
+                            <CalcButton onPress={this.onClick} fontsize="19" sign="DEL"></CalcButton>
                         </Row>
                         <Row>
-                            <CalcButton color="#3E3C3E" sign="+"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="/"></CalcButton>
                         </Row>
                         <Row>
-                            <CalcButton sign="x"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="x"></CalcButton>
                         </Row>
                         <Row>
-                            <CalcButton sign="-"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="-"></CalcButton>
                         </Row>
                         <Row>
-                            <CalcButton color="#3E3C3E" sign="+"></CalcButton>
+                            <CalcButton onPress={this.onClick} sign="+"></CalcButton>
                         </Row>
                     </Col>
                     <Col style={styles.green}></Col>
@@ -100,23 +120,19 @@ const styles = StyleSheet.create({
     },
     buttons: {
         paddingBottom: 20
+    },
+    lastOperaion: {
+        flex: 1,
+        fontSize: 30,
+        paddingTop: 40,
+        paddingRight: 20,
+        textAlign: "right",
+    },
+    result: {
+        flex: 1,
+        fontSize: 45,
+        padding: 20,
+        textAlign: "right",
+        color: "#585958"
     }
 });
-
-function mapProps(props: Props): Props {
-
-    console.log(props)
-    return {
-        text: props.text,
-        counter: props.counter,
-    }
-}
-
-function mapDispatch(dispath: Dispatch<any>) {
-    return {
-        increase: () => dispath({ type: "increase" }),
-        decrease: () => dispath({ type: "decrease" })
-    }
-}
-
-export default connect(mapProps, mapDispatch)(App)

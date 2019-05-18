@@ -7,21 +7,20 @@ import Col from "./layout/Col";
 interface Props extends ViewProps {
     sign: string,
     fontsize?: string,
-    color: string,
-    onClick: (sing: string) => void
+    onPress?: (sing: string) => void,
 }
 interface State { opacity: any }
 export default class CalcButton extends Component<Props, State>{
 
     private style: any;
     private fontSize?: number
-    private onClick: (sign: string) => void
+    private onPress: (sign: string) => void
 
     constructor(props: Props) {
         super(props)
         this.createStyle();
         this.fontSize = parseInt(this.props.fontsize || "28");
-        this.onClick = this.props.onClick || ((e) => {});
+        this.onPress = this.props.onPress || ((e) => {});
 
         this.state = {
             opacity: new Animated.Value(0)
@@ -29,8 +28,8 @@ export default class CalcButton extends Component<Props, State>{
 
     }
 
-    onPress = (e: NativeSyntheticEvent<TouchEvent> ) => {
-        this.onClick(this.props.sign);
+    onPressHandle = (e: NativeSyntheticEvent<TouchEvent> ) => {
+        this.onPress(this.props.sign);
 
         let time = 100;
         Animated.timing(this.state.opacity, { toValue: 1, duration: time }).start();
@@ -46,7 +45,7 @@ export default class CalcButton extends Component<Props, State>{
                 <TouchableOpacity style={[this.style.wrapper]}>
                     <Animated.View style={[this.style.touch, { opacity: opacity }]}></Animated.View>
                 </TouchableOpacity>
-                <TouchableOpacity  activeOpacity={0.8} onPress={this.onPress} style={[this.style.wrapper]} >
+                <TouchableOpacity  activeOpacity={0.8} onPress={this.onPressHandle} style={[this.style.wrapper]} >
                     <Text style={[this.style.text, { fontSize: this.fontSize }]}>{this.props.sign}</Text>
                 </TouchableOpacity>
             </Col>
